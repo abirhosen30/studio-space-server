@@ -1,5 +1,5 @@
 import express from "express";
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from "mongodb";
 import cors from "cors";
 import 'dotenv/config'
 const app = express();
@@ -40,8 +40,17 @@ app.get("/studios", async (req, res) => {
 
 app.get("/studios/:id", async (req, res) => {
   const { id } = req.params;
-  const result = await studiosCollection.findOne({ _id: new ObjectId(id) });
-  res.send(result);
+  const data = await studiosCollection.findOne({ _id: new ObjectId(id) });
+  res.send(data);
+})
+
+app.patch("/studios/:id", async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+  const result = await studiosCollection.updateOne(
+    {_id: new ObjectId(id) },
+   { $set: data });
+  res.json(result);
 })
 
 
