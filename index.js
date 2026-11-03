@@ -53,6 +53,12 @@ app.patch("/studios/:id", async (req, res) => {
   res.json(result);
 })
 
+app.delete("/studios/:id", async (req, res) => {
+  const { id } = req.params;
+  const result = await studiosCollection.deleteOne({ _id: new ObjectId(id) });
+  res.json(result);
+})
+
 
 app.get("/", (req, res) => {
   res.send({message: 'Server is running fine!'});
