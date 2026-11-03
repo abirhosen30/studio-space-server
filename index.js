@@ -33,6 +33,11 @@ app.post("/add-studio", async (req, res) => {
   res.send(result);
 })
 
+app.get("/studios", async (req, res) => {
+  const result = await studiosCollection.find({}).toArray();
+  res.send(result);
+})
+
 
 app.get("/", (req, res) => {
   res.send({message: 'Server is running fine!'});
