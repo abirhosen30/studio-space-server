@@ -68,20 +68,37 @@ app.post("/booking", async (req, res) => {
   const result = await bookingsCollection.insertOne({
     ...bookingData,
     studioId,
+    status: "Pending",
   });
   res.send(result);
 });
 
-app.get('/my-bookings/:email', async (req, res) => {
+app.get("/my-bookings/:email", async (req, res) => {
   const { email } = req.params;
   const result = await bookingsCollection.find({ email: email }).toArray();
   res.send(result);
 });
 
-app.delete('/my-bookings/:id', async (req, res) => {
+app.delete("/my-bookings/:id", async (req, res) => {
   const { id } = req.params;
-  const result = await bookingsCollection.deleteOne({ _id:(id) });
-  res.send(result);
+  const email = req.query.email;
+
+  if (!ObjectId.isValid(id) || typeof email !== "string" || !email.trim()) {
+    return res
+      .status(400)
+      .json({ message: "A valid booking ID and email are required." });
+  }
+
+  const result = await bookingsCollection.deleteOne({
+    _id: new ObjectId(id),
+    email: email.trim(),
+  });
+
+  if (result.deletedCount === 0) {
+    return res.status(404).json({ message: "Booking not found." });
+  }
+
+  res.json({ deleted: true });
 });
 
 app.listen(PORT, () => {
