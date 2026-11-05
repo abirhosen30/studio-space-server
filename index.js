@@ -37,6 +37,15 @@ app.get("/studios", async (req, res) => {
   res.send(result);
 });
 
+app.get("/featured-studios", async (req, res) => {
+  const result = await studiosCollection
+    .find({})
+    .sort({ _id: -1 })
+    .limit(6)
+    .toArray();
+  res.json(result);
+});
+
 app.get("/studios/:id", async (req, res) => {
   const { id } = req.params;
   const data = await studiosCollection.findOne({ _id: new ObjectId(id) });
