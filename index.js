@@ -78,7 +78,11 @@ app.get('/my-bookings/:email', async (req, res) => {
   res.send(result);
 });
 
-
+app.delete('/my-bookings/:id', async (req, res) => {
+  const { id } = req.params;
+  const result = await bookingsCollection.deleteOne({ _id:(id) });
+  res.send(result);
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running at ${PORT}`);
